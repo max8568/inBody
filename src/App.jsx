@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { Activity, User, Flame, Calendar, Info, Database, Heart, Clock, PlusCircle, LogIn, LogOut, RefreshCw, Loader2 } from 'lucide-react';
-import { initGoogleAPI, signIn, signOut, isSignedIn, getCurrentUser, readSheetData, appendSheetData, onSignInChange } from './services/googleSheets';
+import { initGoogleAPI, signIn, signOut, isSignedIn, getCurrentUser, readSheetData, appendSheetData, appendViaAppsScript, onSignInChange } from './services/googleSheets';
 
 const App = () => {
   const [records, setRecords] = useState([]);
@@ -155,9 +155,14 @@ const App = () => {
 
     setIsSaving(true);
     setError(null);
-    
+
     try {
-      await appendSheetData(newRecord);
+      const appsScriptUrl = import.meta.env.VITE_APPS_SCRIPT_URL;
+      if (appsScriptUrl) {
+        await appendViaAppsScript(newRecord);
+      } else {
+        await appendSheetData(newRecord);
+      }
       setRecords([...records, newRecord]);
       // 保留輸入值，只更新日期為今天（方便連續輸入，下次只需微調數值）
       // 不清空數據，因為通常每天的數據變化不大

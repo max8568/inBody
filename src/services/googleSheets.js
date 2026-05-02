@@ -334,6 +334,23 @@ export const appendSheetData = async (record) => {
   }
 };
 
+// 透過 Apps Script Web App 寫入新記錄（不需要 OAuth）
+// 欄位順序：日期, 體重, BMI, 體脂, 肌肉量, 推定骨量, 內臟脂肪, 基礎代謝, 體內年齡
+export const appendViaAppsScript = async (record) => {
+  const url = import.meta.env.VITE_APPS_SCRIPT_URL;
+  if (!url) throw new Error('尚未設定 VITE_APPS_SCRIPT_URL，請先部署 Apps Script 並填入 .env');
+
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(record),
+  });
+
+  // Apps Script 會先 302 redirect，fetch 預設會跟隨
+  const result = await response.json();
+  if (!result.success) throw new Error(result.error || 'Apps Script 寫入失敗');
+  return result;
+};
+
 // 監聽登入狀態變化（GIS 不支援自動監聽，所以這是空函數）
 export const onSignInChange = (callback) => {
   // GIS 不支援自動狀態監聯
