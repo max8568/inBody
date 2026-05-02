@@ -1,3 +1,54 @@
+# inBody — Body Metrics Tracker
+
+A personal body composition tracking app that records measurements and visualizes trends over time.
+
+**Live:** https://max8568.github.io/inBody/
+
+## Features
+
+- Google account sign-in (OAuth)
+- Log measurements: weight, BMI, body fat %, muscle mass, bone mass, visceral fat, basal metabolism, body age
+- Auto-fills previous values for quick data entry
+- 8 line charts for trend visualization
+- Recent 14 records table
+- Data stored in Google Sheets
+
+## Tech Stack
+
+- **Frontend**: React 19 + Vite
+- **Styling**: Tailwind CSS 4
+- **Charts**: Recharts
+- **Storage**: Google Sheets API
+- **Auth**: Google Identity Services (OAuth 2.0)
+- **Write**: Google Apps Script Web App (no OAuth token required)
+- **Deploy**: GitHub Pages
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Set the following variables in `.env`:
+
+```
+VITE_GOOGLE_CLIENT_ID=...
+VITE_SPREADSHEET_ID=...
+VITE_SHEETS_RANGE=2026!A:I
+VITE_APPS_SCRIPT_URL=...
+```
+
+## Deploy
+
+```bash
+npm run deploy
+```
+
+Builds and pushes to the `gh-pages` branch automatically.
+
+---
+
 # inBody 身體指標追蹤
 
 個人身體組成數據追蹤 App，紀錄每次量測結果並以圖表呈現趨勢。
