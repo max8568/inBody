@@ -1,16 +1,48 @@
-# React + Vite
+# inBody 身體指標追蹤
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+個人身體組成數據追蹤 App，紀錄每次量測結果並以圖表呈現趨勢。
 
-Currently, two official plugins are available:
+**Live：** https://max8568.github.io/inBody/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 功能
 
-## React Compiler
+- Google 帳號登入（OAuth）
+- 新增量測紀錄（體重、BMI、體脂、肌肉量、推定骨量、內臟脂肪、基礎代謝、體內年齡）
+- 自動帶入上次數值，方便快速輸入
+- 8 項指標折線圖，視覺化趨勢
+- 最近 14 筆紀錄列表
+- 資料儲存於 Google 試算表
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 技術架構
 
-## Expanding the ESLint configuration
+- **Frontend**：React 19 + Vite
+- **樣式**：Tailwind CSS 4
+- **圖表**：Recharts
+- **資料儲存**：Google Sheets API
+- **登入**：Google Identity Services (OAuth 2.0)
+- **寫入**：Google Apps Script Web App（不需 OAuth token）
+- **部署**：GitHub Pages
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 本地開發
+
+```bash
+npm install
+npm run dev
+```
+
+在 `.env` 設定以下變數：
+
+```
+VITE_GOOGLE_CLIENT_ID=...
+VITE_SPREADSHEET_ID=...
+VITE_SHEETS_RANGE=2026!A:I
+VITE_APPS_SCRIPT_URL=...
+```
+
+## 部署
+
+```bash
+npm run deploy
+```
+
+自動 build 並推送至 `gh-pages` branch。
