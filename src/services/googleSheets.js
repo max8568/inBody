@@ -133,7 +133,7 @@ export const isSignedIn = () => {
   return !!accessToken && !isTokenExpired();
 };
 
-// 靜默刷新 token（不彈出同意畫面）
+// 靜默刷新 token（不彈出同意畫面），5 秒超時
 const silentRefreshToken = () => {
   return new Promise((resolve) => {
     if (!tokenClient) {
@@ -141,14 +141,19 @@ const silentRefreshToken = () => {
       return;
     }
 
+    const timeout = setTimeout(() => {
+      console.log('Silent refresh timed out');
+      resolve(false);
+    }, 5000);
+
     tokenClient.callback = (response) => {
+      clearTimeout(timeout);
       if (response.error) {
         console.log('Silent refresh failed:', response.error);
         resolve(false);
         return;
       }
 
-      // 使用 Google 回傳的實際過期時間（預設 3600 秒）
       const expiresIn = parseInt(response.expires_in) || 3600;
       saveTokenToStorage(response.access_token, expiresIn);
       window.gapi.client.setToken({ access_token: response.access_token });
@@ -156,7 +161,6 @@ const silentRefreshToken = () => {
       resolve(true);
     };
 
-    // 嘗試靜默刷新（不顯示同意畫面）
     tokenClient.requestAccessToken({ prompt: '' });
   });
 };
